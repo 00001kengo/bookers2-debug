@@ -5,15 +5,16 @@ Rails.application.routes.draw do
   root 'homes#top'
   get 'about' => 'homes#about'
 
-  resources :users,only: [:show,:index,:edit,:update]
+  resources :users,only: [:show,:index,:edit,:update] do
+    resource :relationships, only: [:create, :destroy]
+   	get 'followings' => 'relationships#followings', as: 'followings'
+  	get 'followers' => 'relationships#followers', as: 'followers'
+  end
 
   resources :books do
     resources :book_comments, only: [:create, :destroy]
     resource :favorites, only: [:create, :destroy]
   end
 
-  post 'follow/:id' => 'relationships#create', as: 'follow'
-  delete 'unfollow/:id' => 'relationships#destroy', as: 'unfollow'
-  resources :users, only: :show
 
 end
